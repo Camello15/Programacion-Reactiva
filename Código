@@ -1,0 +1,36 @@
+import reactor.core.publisher.Flux;
+import java.time.Duration;
+
+public class ReactiveExample {
+    public static void main(String[] args) {
+        // Creamos un flujo de datos que genera una secuencia de números del 1 al 10
+        Flux<Integer> numbers = Flux.range(1, 10);
+
+        // Operador map: Transforma cada número multiplicándolo por 2
+        Flux<Integer> doubledNumbers = numbers.map(n -> n * 2);
+
+        // Operador filter: Filtra solo los números pares
+        Flux<Integer> evenNumbers = numbers.filter(n -> n % 2 == 0);
+
+        // Operador merge: Combina dos flujos en uno solo
+        Flux<Integer> mergedFlux = Flux.merge(doubledNumbers, evenNumbers);
+
+        // Operador flatMap: Transforma cada número en un flujo de datos que emite el número y su cuadrado
+        Flux<Integer> squaredNumbers = numbers.flatMap(n -> Flux.just(n, n * n));
+
+        // Operador concat: Concatena dos flujos en uno solo, emitiendo primero los elementos del primer flujo y luego los del segundo
+        Flux<Integer> concatenatedFlux = Flux.concat(numbers, doubledNumbers);
+
+        // Operador take: Emite solo los primeros 5 elementos del flujo
+        Flux<Integer> firstFiveNumbers = numbers.take(5);
+
+        // Operador scan: Realiza una acumulación sobre los elementos del flujo, sumando los valores acumulados con el valor actual
+        Flux<Integer> accumulatedSum = numbers.scan(0, (acc, next) -> acc + next);
+
+        // Operador debounce: Filtra los elementos del flujo, emitiendo únicamente aquellos que no están seguidos por otro evento dentro de un período de tiempo especificado
+        Flux<Integer> debouncedFlux = numbers.debounce(Duration.ofMillis(500));
+
+        // Suscripción para imprimir los elementos del flujo
+        mergedFlux.subscribe(System.out::println);
+    }
+}
